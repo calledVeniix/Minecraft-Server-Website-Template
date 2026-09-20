@@ -3,6 +3,7 @@
 <img src="assets/img/logo.webp" alt="Logo" width="130">
 
 # Minecraft Server Website Template
+![Downloads](https://img.shields.io/github/downloads/calledVeniix/Minecraft-Server-Website-Template/total)
 
 **A modern Minecraft server website with liquid-glass design, pixel styling and a live server status.**
 Fully customisable without any coding knowledge — you only edit **one single file**.
