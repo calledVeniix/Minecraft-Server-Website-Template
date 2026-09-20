@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft Server</title>
+
+  <!-- These values are filled in automatically from assets/js/config.js -->
+  <meta name="description" content="Minecraft Server" />
+  <meta name="theme-color" content="#2b6bff" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Minecraft Server" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content="assets/img/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="assets/img/og-image.png" />
+
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any" />
+  <link rel="icon" href="assets/img/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />
+
+  <!-- Fonts: "Pixelify Sans" looks like Minecraft, "Outfit" keeps body text readable -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Outfit:wght@300..700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+
+  <!-- Progress bar & background effects -->
+  <div class="scroll-progress" id="progress"></div>
+  <div class="bg-layer">
+    <div class="aurora aurora--1"></div>
+    <div class="aurora aurora--2"></div>
+    <div class="aurora aurora--3"></div>
+  </div>
+  <div class="bg-grid"></div>
+  <div class="bg-noise"></div>
+  <canvas id="particles"></canvas>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- ===================== ANNOUNCEMENT ===================== -->
+  <div class="announce" id="announce"></div>
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <header class="nav" id="nav">
+    <div class="wrap nav__inner">
+      <a class="brand" href="#home" aria-label="Back to top">
+        <img class="brand__logo" data-logo src="assets/img/logo.webp" alt="Server logo" width="46" height="46" />
+        <span class="brand__name" data-brand-name></span>
+      </a>
+
+      <nav class="nav__links" id="navLinks" aria-label="Main menu"></nav>
+
+      <div class="nav__actions">
+        <a class="btn btn--primary btn--sm" id="navBtn" href="#">Discord</a>
+        <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile menu"></nav>
+
+  <main>
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="home">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <span class="hero__badge" id="heroBadge"></span>
+          <h1 class="hero__title" id="heroTitle"></h1>
+          <p class="hero__tagline" id="heroTagline"></p>
+          <p class="hero__text" id="heroText"></p>
+
+          <div class="hero__actions" id="heroActions"></div>
+
+          <div class="ip-box glass glass--live" data-reveal style="--delay:150ms">
+            <div class="ip-row">
+              <span class="ip-row__label">Java</span>
+              <span class="ip-row__value" id="ipJava">-</span>
+              <button class="ip-copy" data-copy-target="java" aria-label="Copy Java IP">Copy</button>
+            </div>
+            <div class="ip-row" id="ipBedrockRow">
+              <span class="ip-row__label">Bedrock</span>
+              <span class="ip-row__value" id="ipBedrock">-</span>
+              <button class="ip-copy" data-copy-target="bedrock" aria-label="Copy Bedrock IP">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__stage">
+          <div class="hero__logo-wrap" id="heroLogoWrap">
+            <svg class="hero__rings" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+              <circle class="hero__rings-solid" cx="100" cy="100" r="96" />
+              <circle class="hero__rings-dash"  cx="100" cy="100" r="84" />
+            </svg>
+            <div class="hero__halo"></div>
+            <img class="hero__logo" data-logo src="assets/img/logo.webp" alt="Server logo" width="430" height="430" />
+
+            <div class="float-card glass float-card--a">
+              <span class="dot" data-live-dot></span>
+              <span><b data-live-players>0</b><small>Players online</small></span>
+            </div>
+            <div class="float-card glass float-card--b">
+              <span><b data-live-version>-</b><small>Version</small></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-hint">
+        <span class="scroll-hint__mouse"></span>
+        Scroll
+      </div>
+    </section>
+
+    <!-- ===================== LIVE STATUS ===================== -->
+    <section id="status">
+      <div class="wrap">
+        <div class="head" data-reveal>
+          <span class="head__eyebrow">Live</span>
+          <h2 class="head__title" id="statusTitle">Live Server Status</h2>
+          <p class="head__text" id="statusSub"></p>
+        </div>
+
+        <div class="status-card glass glass--live" data-reveal="zoom">
+          <div class="status-top">
+            <div class="status-state">
+              <span class="dot" id="stDot"></span>
+              <span id="stStateText">Connecting...</span>
+            </div>
+            <div class="status-refresh">
+              <span>Updated: <span id="stAgo">-</span></span>
+              <button id="stRefresh" type="button">Refresh</button>
+            </div>
+          </div>
+
+          <div class="status-grid">
+            <div class="status-tile">
+              <div class="status-tile__label">Players online</div>
+              <div class="status-tile__value" data-st-load>
+                <span id="stPlayers">0</span> <small id="stMax"></small>
+              </div>
+            </div>
+            <div class="status-tile status-tile--text" id="stVersionTile">
+              <div class="status-tile__label">Version</div>
+              <div class="status-tile__value" data-st-load><span id="stVersion">-</span></div>
+            </div>
+            <div class="status-tile status-tile--text">
+              <div class="status-tile__label">Server address</div>
+              <div class="status-tile__value"><span id="stAddress">-</span></div>
+            </div>
+          </div>
+
+          <div class="motd" id="stMotdBox">
+            <span class="motd__label">MOTD - message of the day</span>
+            <div id="stMotd">...</div>
+          </div>
+
+          <div id="stBarWrap">
+            <div class="bar"><div class="bar__fill" id="stBar"></div></div>
+            <div class="bar-legend">
+              <span id="stBarText">Loading data...</span>
+              <span>Capacity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== STATS ===================== -->
+    <section id="numbers" style="padding-top:0">
+      <div class="wrap">
+        <div class="stats" id="statsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ===================== GAMEMODES ===================== -->
+    <section id="gamemodes">
+      <div class="wrap">
+        <div class="head" data-reveal>
+          <span class="head__eyebrow">Gamemodes</span>
+          <h2 class="head__title" id="modesTitle">Our gamemodes</h2>
+          <p class="head__text" id="modesSub"></p>
+        </div>
+        <div class="cards cards--modes" id="modesGrid"></div>
+      </div>
+    </section>
+
+    <!-- ===================== FEATURES ===================== -->
+    <section id="features">
+      <div class="wrap">
+        <div class="head" data-reveal>
+          <span class="head__eyebrow">Features</span>
+          <h2 class="head__title" id="featuresTitle">Why our server?</h2>
+          <p class="head__text" id="featuresSub"></p>
+        </div>
+        <div class="cards" id="featuresGrid"></div>
+      </div>
+    </section>
+
+    <!-- ===================== HOW TO JOIN ===================== -->
+    <section id="join">
+      <div class="wrap">
+        <div class="head" data-reveal>
+          <span class="head__eyebrow">Get started</span>
+          <h2 class="head__title" id="joinTitle">Join in 3 steps</h2>
+        </div>
+        <div class="steps" id="stepsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section id="faq">
+      <div class="wrap">
+        <div class="head" data-reveal>
+          <span class="head__eyebrow">FAQ</span>
+          <h2 class="head__title" id="faqTitle">Frequently asked questions</h2>
+          <p class="head__text" id="faqSub"></p>
+        </div>
+        <div class="faq" id="faqList"></div>
+      </div>
+    </section>
+
+    <!-- ===================== CALL TO ACTION ===================== -->
+    <section id="cta">
+      <div class="wrap">
+        <div class="cta glass glass--live" id="ctaBox" data-reveal="zoom"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__grid">
+        <div>
+          <a class="brand" href="#home">
+            <img class="brand__logo" data-logo-footer src="assets/img/logo.webp" alt="Server logo" width="46" height="46" />
+            <span class="brand__name" data-brand-name></span>
+          </a>
+          <p class="footer__about" id="footerAbout"></p>
+          <div class="socials" id="socials"></div>
+        </div>
+        <div id="footerCols" style="display:contents"></div>
+      </div>
+
+      <div class="footer__bottom">
+        <span id="copyright"></span>
+        <span class="made-by">
+          Made with <span class="heart">&#10084;&#65039;</span> by
+          <a href="https://veniix.studio" target="_blank" rel="noopener">Veniix</a>
+        </span>
+      </div>
+
+      <!-- Legal notice - please do NOT remove -->
+      <p class="disclaimer">
+        We are not affiliated with Mojang, AB.
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top" id="toTop" aria-label="Scroll back to top">&#8593;</button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <div style="padding:60px 24px;text-align:center">
+      <h2 style="font-family:monospace">JavaScript is disabled</h2>
+      <p>Please enable JavaScript in your browser to view this page.</p>
+    </div>
+  </noscript>
+
+  <!-- Do not change the order: config comes first! -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/icons.js"></script>
+  <script src="assets/js/status.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
